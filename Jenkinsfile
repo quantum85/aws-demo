@@ -18,6 +18,7 @@ pipeline {
         stage('Docker Run') {
             steps {
                 sh 'docker run -d --name web-app -p 80:80 aws-demo:latest'
+               
             }
         }
     }
