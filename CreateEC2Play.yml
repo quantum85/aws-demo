@@ -1,0 +1,39 @@
+- name: Ansible Demo
+  hosts: local
+  tasks:
+  - name: launching AWS instance using Ansible
+    community.aws.ec2_instance:
+      name: "demo-instance"
+      user_data: "{{ lookup('file', 'user_data.sh') }}"
+      key_name: "ec2-demo"
+      instance_type: t2.micro
+      security_group: default
+      network:
+        assign_public_ip: true
+      image_id: ami-02f9ea74050d6f812
+      wait_timeout: 180
+      tags:
+        Environment: Testing
+  - name: Gather information about all instances
+    community.aws.ec2_instance_info:
+      filters:
+        "tag:Name": demo-instance
+    register: find_output
+  - name: Get Public IP to variable
+    set_fact:
+      PubIP: "{{ find_output.instances[0].network_interfaces[0].association.public_ip }}"
+  - name: Insert obtained EC2 instance ip to inventory.yml
+    blockinfile:
+      path: "{{ playbook_dir }}/inventory.yml"
+      marker: ""
+      insertafter: 'localhost'
+      block: |5
+               ec2-demo:
+                 hosts:
+                   {{ PubIP }}
+  - name: Remove blank lines blockinfile put in
+    lineinfile :
+      path: "{{ playbook_dir }}/inventory.yml"
+      state: absent
+      regexp: '^$'
+  - debug: msg="ssh ec2-user@{{ PubIP }}"

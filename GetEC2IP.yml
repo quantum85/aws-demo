@@ -1,0 +1,26 @@
+- name: EC2 get instance info
+  hosts: local
+  tasks:
+  - name: Gather information about all instances
+    community.aws.ec2_instance_info:
+      filters: 
+        "tag:Name": demo-instance
+    register: find_output
+  - name: Get Public IP to variable
+    set_fact:
+      PubIP: "{{ find_output.instances[0].network_interfaces[0].association.public_ip }}"
+  - name: Insert obtained EC2 instance ip to inventory.yml 
+    blockinfile:
+      path: "{{ playbook_dir }}/inventory.yml"
+      marker: ""
+      insertafter: 'localhost'
+      block: |5
+               ec2-demo:
+                 hosts:
+                   {{ PubIP }}
+  - name: Remove blank lines blockinfile put in
+    lineinfile :
+      path: "{{ playbook_dir }}/inventory.yml"
+      state: absent
+      regexp: '^$'
+  - debug: msg="ssh ec2-user@{{ PubIP }}"
