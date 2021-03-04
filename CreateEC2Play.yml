@@ -1,9 +1,11 @@
 - name: Ansible Demo
   hosts: local
+  vars: 
+    ec2_name: demo1
   tasks:
   - name: launching AWS instance using Ansible
     community.aws.ec2_instance:
-      name: "demo-instance"
+      name: "{{ ec2_name }}"
       user_data: "{{ lookup('file', 'user_data.sh') }}"
       key_name: "ec2-demo"
       instance_type: t2.micro
@@ -17,7 +19,7 @@
   - name: Gather information about all instances
     community.aws.ec2_instance_info:
       filters:
-        "tag:Name": demo-instance
+        "tag:Name": "{{ ec2_name }}"
     register: find_output
   - name: Get Public IP to variable
     set_fact:
