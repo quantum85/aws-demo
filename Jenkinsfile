@@ -15,9 +15,9 @@ pipeline {
                 sh 'docker push 780893349257.dkr.ecr.eu-central-1.amazonaws.com/aws-demo:latest'
             }
         }
-        stage('Docker ECR Push') {
+        stage('Docker Run') {
             steps {
-                sh 'docker run -d --name web-app -p 80:80 app:latest'
+                sh 'docker run -d --name web-app -p 80:80 aws-demo:latest'
             }
         }
     }
