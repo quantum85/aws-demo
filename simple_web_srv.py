@@ -20,6 +20,6 @@ httpd.serve_forever()
 '''
 HTTP/1.0 200 OK
 Date: Tue, 4 Mar 2021 20:36:49 GMT
-Server: SimpleHTTP/0.6 Python/3.5.2
+Server: SimpleHTTP/0.6 Python/3
 Hello world
 '''
