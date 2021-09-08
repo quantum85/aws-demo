@@ -1,8 +1,5 @@
 # aws-demo
 
-
-Hi! First of all thanks for the interesting task!
-Please find the resulting scripts here and the explanation below. 
 #### I would divide the tasks into the following
 ##### 1. AWS EC2 Deployment automation.
 ##### 2. Jenkins Pipeline plus GitHub binding.
